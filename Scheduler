@@ -10,7 +10,8 @@ ct -> Completion Time
 tat -> Turn Arround Time
 wt -> Waiting Time
 avg_wt -> Average Waiting Time
-avg_tat -> Average Turn Arround Time
+avg_tat -> Average Turn Around Time
+x -> Counter 
 */
 
 //---------------------------------- USER INPUT -------------------------------
