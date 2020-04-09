@@ -79,7 +79,7 @@ avg_tat -> Average Turn Arround Time
    temp[i]=temp[i]-tq;
   }
 
-if(temp[i]==0 && flag==1)// Output
+if(temp[i]==0 flag==1)// Output
    {
     flag=0;
     wt=0;
