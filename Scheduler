@@ -2,8 +2,6 @@
 #include<unistd.h>
 #include<sys/wait.h>
 
-int main()
-{
 /*
 at -> Arrival Time
 bt -> Time Quantum
@@ -15,6 +13,7 @@ avg_tat -> Average Turn Around Time
 x -> Counter 
 */
 
+int main {
 //---------------------------------- USER INPUT -------------------------------
  int no,tq,ct=0,flag=0,tat,wt;
  float avg_wt=0,avg_tat=0;
