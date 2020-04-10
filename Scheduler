@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<unistd.h>
+#include<sys/wait.h>
 
 int main()
 {
@@ -61,50 +62,61 @@ x -> Counter
    }
 
 //--------------------------------- MAIN CODE -----------------------------------
- int x=no;
- printf("\n\t\t\t\t\tTime Quantum = %d ms",tq);
- printf("\nProcess ID\tArrival Time\tBurst Time\tCompletion Time\t\tTurn Arround Time\tWaitng Time");
-
-//------------------------------------ OUTPUT ----------------------------------
- while(x!=0)
- {
- if(temp[i]<=tq && temp[i]>0)
-  {
-   ct=ct+temp[i];
-   temp[i]=0;
-   flag=1;
-  }
- else if(temp[i]>tq)
-  {
-   ct=ct+tq;
-   temp[i]=temp[i]-tq;
-  }
-
-if(flag==1)// Output
+ pid_t thread;
+ thread = fork();
+ if(thread==0)
    {
-    flag=0;
-    wt=0;
-    tat=0;
+     int x=no;
+     printf("\n\t\t\t\t\tTime Quantum = %d ms",tq);
+     printf("\nProcess ID\tArrival Time\tBurst Time\tCompletion Time\t\tTurn Arround Time\tWaitng Time");
 
-    tat=ct-at[i];
-    wt=tat-bt[i];
-    avg_wt+=wt;
-    avg_tat+=tat;
+     //------------------------------------ OUTPUT ----------------------------------
+     while(x!=0) // While counter x is not eqaul to process number
+       {
+         if(temp[i]<=tq && temp[i]>0) 
+           {
+             ct=ct+temp[i];
+             temp[i]=0;
+             flag=1;
+           }
+     else if(temp[i]>tq)
+       {
+         ct=ct+tq;
+         temp[i]=temp[i]-tq;
+       }
 
-    printf("\n%d\t\t%d\t\t%d\t\t%d\t\t\t%d\t\t\t%d", i+1,at[i], bt[i],ct,tat,wt);
-    x--;
-   }
+     if(flag==1)// Output
+       {
+         flag=0;
+         wt=0;
+         tat=0;
 
- if(i==no-1)
-  {
-   i=0;
-  }
- else if(at[i+1]<=ct)
-  {i++;}
+        tat=ct-at[i];
+        wt=tat-bt[i];
+        avg_wt+=wt;
+        avg_tat+=tat;
+
+        printf("\n%d\t\t%d\t\t%d\t\t%d\t\t\t%d\t\t\t%d", i+1,at[i], bt[i],ct,tat,wt); // displaying values.
+        x--;
+       }
+
+     if(i==no-1)  // If i is equal to process number then set the process execution from the first process again.
+       {
+        i=0;
+       }
+    else if(at[i+1]<=ct)  // if the arrival time of the process is arrived then switch to next process
+       {i++;}
+    else
+       {i=0;}
+ }
+ 
+   printf("\n\n\nAverage Waiting Time = %.2lf ms\n\nAverage Turn arround Time = %.2lf ms\n",avg_wt/no,avg_tat/no);
+ }
+ // Holding the parent process. 
  else
-  {i=0;}
-}
-printf("\n\n\nAverage Waiting Time = %.2lf ms\n\nAverage Turn arround Time = %.2lf ms\n",avg_wt/no,avg_tat/no);
+    {
+      thread=wait(NULL);
+    }
 
 //----------------------------------------------------------------------------------------------
 }
