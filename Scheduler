@@ -107,9 +107,9 @@ int main {
        {i++;}
     else
        {i=0;}
- }
+   }
  
-   printf("\n\n\nAverage Waiting Time = %.2lf ms\n\nAverage Turn arround Time = %.2lf ms\n",avg_wt/no,avg_tat/no);
+     printf("\n\n\nAverage Waiting Time = %.2lf ms\n\nAverage Turn arround Time = %.2lf ms\n",avg_wt/no,avg_tat/no);
  }
  // Holding the parent process. 
  else
