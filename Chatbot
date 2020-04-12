@@ -1,1 +1,71 @@
 
+from chatterbot import ChatBot
+from chatterbot.trainers import ListTrainer # Method to train chatbot
+from tkinter import *
+import pyttsx3 as pp
+import threading
+
+# create chatbot
+bot = ChatBot("My Bot")
+# ----------------------------------------Text to Speech--------------------------------------------
+engine = pp.init()
+rate = engine.getProperty("rate")
+engine.setProperty("rate", 180)
+
+voices = engine.getProperty('voices')
+engine.setProperty('voice', voices[0].id)
+
+def speak(word):
+    engine.say(word)
+    engine.runAndWait()
+# -----------------------Placement Queries------------------------------------------------------------
+conversion = open(file="CHAT.txt").readlines()
+trainer = ListTrainer(bot)
+trainer.train(conversion)
+# ------------------------------------------------------------------------------------------------------------
+def ask_from_bot():
+    query = textField.get()
+    answer_from_bot = bot.get_response(query)
+    msg.insert(END, "You:  "+query)
+    msg.insert(END, "Bot:  "+str(answer_from_bot))
+    speak(answer_from_bot)
+    textField.delete(0, END)
+    msg.yview(END)
+# ---------------------------------WEB PAGE----------------------------------------------------------
+main = Tk()
+main.geometry("500x500")
+label = Label(main, text="CHATBOT  FOR  PLACEMENT  QUERY",font=("italic",20,"bold"),bg='orange',bd=5)
+label.pack(pady=20)
+main['bg'] = 'black'
+label.pack()
+
+# ----------------------------------------------Frames--------------------------------------------------------------
+frame = Frame(main)
+# -----------------------------------------Creating y scrollbar--------------------------------------------------------
+sy = Scrollbar(frame)
+sy.pack(side=RIGHT, fill=Y)
+# ------------------------------------------Creating x scrollbar-----------------------------------------------------
+sx = Scrollbar(frame,orient=HORIZONTAL)
+sx.pack(side=BOTTOM, fill=X)
+msg = Listbox(frame, width=100, height=25,bg='Light Cyan', yscrollcommand=sy.set,xscrollcommand=sx.set)
+msg.pack(side=LEFT, fill=BOTH, pady=20)
+# ------------------------------------------Scrollbar movement--------------------------------------------------------
+sy.config(command=msg.yview)
+sx.config(command=msg.xview)
+frame.pack()
+
+
+# Creating Field for texting------------------------------------------------------------------------------------------
+textField = Entry(main, font=("Arial", 20),bg='Light Cyan',relief=GROOVE,width=40)
+textField.pack(pady=10)
+btn = Button(main, text="send", font=("Verdana", 15,"bold"),bd=5, fg='black',bg="light green",command=ask_from_bot)
+btn.pack()
+# --------------------------------------------------------------------------------------------------
+# Creating a Function
+def enter_function(event):
+    btn.invoke()
+
+# Main window binds with enter key
+main.bind('<Return>', enter_function)
+
+main.mainloop()
